@@ -2,37 +2,21 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <!-- เพิ่ม meta สำหรับเอฟเฟค -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-<!-- เพิ่มสไตล์เพิ่มเติมใน head -->
-<style>
-    /* เพิ่มเอฟเฟคพื้นหลังหน้า 5 */
-    #page5 {
-        background: linear-gradient(45deg, #FF6B6B, #FFD93D);
-        animation: rainbow 5s infinite;
-    }
-    
-    @keyframes rainbow {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-    }
-</style>
-    <title>ทายชื่อสัตว์โลกสุดแสนน่ารัก</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>ทายชื่อสัตว์โลกสุดแทนน่ารัก</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <!-- Page 1 -->
     <div id="page1" class="page active">
-        <h1 class="title">ทายชื่อสัตว์โลกสุดแสนน่ารัก</h1>
+        <h1 class="title">ทายชื่อสัตว์โลกสุดแทนน่ารัก</h1>
         <div class="slideshow"></div>
         <button id="startBtn" class="play-btn">เล่นเกม</button>
     </div>
 
     <!-- Page 2 -->
     <div id="page2" class="page">
-        <img src="chicken.jpg" class="animal-img">
+        <img src="chicken.jpg" class="animal-img" alt="รูปสัตว์">
         <div class="options">
             <button class="option wrong">เป็ด</button>
             <button class="option correct">ไก่</button>
@@ -41,16 +25,16 @@
 
     <!-- Page 3 -->
     <div id="page3" class="page">
-        <img src="egg_chick.jpg" class="animal-img">
+        <img src="egg_chick.jpg" class="animal-img" alt="รูปสัตว์">
         <div class="options">
             <button class="option correct">ไก่</button>
-            <button class="option correct">ลูกเจี๊ยบ</button>
+            <button class="option wrong">ลูกเจี๊ยบ</button>
         </div>
     </div>
 
     <!-- Page 4 -->
     <div id="page4" class="page">
-        <img id="userPhoto" class="animal-img">
+        <img id="userPhoto" class="animal-img" alt="รูปผู้ใช้">
         <div class="options">
             <button class="option wrong">คน</button>
             <button class="option correct">ควาย</button>
@@ -60,7 +44,6 @@
     <!-- Page 5 -->
     <div id="page5" class="page">
         <h1 id="scoreDisplay"></h1>
-        <div class="confetti"></div>
     </div>
 
     <div id="message"></div>
