@@ -134,6 +134,18 @@ body {
     to { opacity: 0; }
 }
 
+#page5 {
+    background: linear-gradient(45deg, #FF6B6B, #FFD93D);
+    animation: rainbow 5s infinite;
+    background-size: 200% 200%;
+}
+
+@keyframes rainbow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
 .confetti {
     position: fixed;
     font-size: 1.5rem;
