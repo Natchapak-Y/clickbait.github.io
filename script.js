@@ -98,7 +98,10 @@ function handleCorrectAnswer(button) {
     const plusOne = document.createElement('div');
     plusOne.className = 'plus-one';
     plusOne.textContent = '+1';
-    document.querySelector('.options').appendChild(plusOne);
+    
+    // หาตำแหน่ง options ของหน้าปัจจุบัน
+    const currentOptions = document.querySelector('.page.active .options');
+    currentOptions.appendChild(plusOne);
 
     // เปลี่ยนรูปเฉพาะหน้า 3
     if(currentPage === 3) {
