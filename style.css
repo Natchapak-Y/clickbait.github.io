@@ -79,9 +79,35 @@ body {
     75% { transform: translateX(10px); }
 }
 
+/* เพิ่ม animation สำหรับ +1 */
 @keyframes float {
-    0% { transform: translateY(0) rotate(30deg); opacity: 1; }
-    100% { transform: translateY(-100px) rotate(30deg); opacity: 0; }
+    0% { 
+        opacity: 1; 
+        transform: translateY(0) rotate(30deg) scale(1);
+    }
+    100% { 
+        opacity: 0; 
+        transform: translateY(-100px) rotate(30deg) scale(1.5);
+    }
+}
+
+/* เพิ่ม animation สำหรับ confetti */
+@keyframes confetti-fall {
+    0% { 
+        transform: translateY(-100vh) rotate(0deg) translateX(0); 
+        opacity: 1;
+    }
+    100% { 
+        transform: translateY(100vh) rotate(720deg) translateX(100vw); 
+        opacity: 0;
+    }
+}
+
+.confetti {
+    position: fixed;
+    font-size: 1.5rem;
+    pointer-events: none;
+    animation: confetti-fall 3s linear forwards;
 }
 
 @keyframes slideshow {
