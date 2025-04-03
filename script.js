@@ -81,17 +81,23 @@ function handleCorrectAnswer(button) {
     plusOne.style.top = '-20px';
     plusOne.style.right = '-20px';
     plusOne.style.transform = 'rotate(30deg)';
-    plusOne.style.animation = 'float 2s';
+    plusOne.style.color = '#4CAF50';
+    plusOne.style.fontSize = '2em';
+    plusOne.style.fontWeight = 'bold';
+    plusOne.style.animation = 'float 2s forwards';
     button.appendChild(plusOne);
 
-    // เพิ่มส่วนเปลี่ยนรูปภาพเมื่ออยู่หน้า 3
+    // เปลี่ยนรูป KFC เมื่อตอบถูกในหน้า 3
     if(currentPage === 3) {
         const img = document.querySelector('#page3 .animal-img');
-        if(button.textContent === 'ไก่') {
-            img.src = 'kfc.jpg'; // เปลี่ยนเป็นรูปไก่ KFC
-        } else if(button.textContent === 'ลูกเจี๊ยบ') {
-            img.src = 'nugget.jpg'; // เปลี่ยนเป็นนักเก็ต KFC
-        }
+        const answer = button.textContent;
+        img.style.transition = 'opacity 1s';
+        img.style.opacity = '0';
+        
+        setTimeout(() => {
+            img.src = answer === 'ไก่' ? 'kfc.jpg' : 'nugget.jpg';
+            img.style.opacity = '1';
+        }, 1000);
     }
 
     setTimeout(() => {
@@ -99,6 +105,24 @@ function handleCorrectAnswer(button) {
         else showPage(currentPage + 1);
         updateGameContent();
     }, 2000);
+}
+
+function createConfetti() {
+    const emojis = ['🎉', '🎊', '✨', '🥳', '🐔', '🍗'];
+    const colors = ['#FF6B6B', '#4CAF50', '#FFD93D', '#6C5CE7'];
+    
+    for(let i = 0; i < 100; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.animationDelay = Math.random() * 2 + 's';
+        confetti.style.color = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.fontSize = Math.random() * 20 + 10 + 'px';
+        document.body.appendChild(confetti);
+        
+        setTimeout(() => confetti.remove(), 3000);
+    }
 }
 
 function handleWrongAnswer(button) {
