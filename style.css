@@ -33,7 +33,22 @@ body {
     width: 300px;
     height: 300px;
     background-size: cover;
+    background-position: center;
     animation: slideshow 15s infinite;
+    position: relative;
+}
+
+.slideshow::before {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    z-index: -1;
+    background-image: 
+        url('animal1.jpg'),
+        url('animal2.jpg'),
+        url('animal3.jpg');
 }
 
 .play-btn {
@@ -48,11 +63,18 @@ body {
     transition: transform 0.3s;
 }
 
+.play-btn:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
 .animal-img {
     max-width: 80%;
     max-height: 60vh;
     margin: 20px 0;
     border-radius: 15px;
+    transition: opacity 0.5s;
 }
 
 .options {
@@ -79,7 +101,6 @@ body {
     75% { transform: translateX(10px); }
 }
 
-/* เพิ่ม animation สำหรับ +1 */
 @keyframes float {
     0% { 
         opacity: 1; 
@@ -91,7 +112,6 @@ body {
     }
 }
 
-/* เพิ่ม animation สำหรับ confetti */
 @keyframes confetti-fall {
     0% { 
         transform: translateY(-100vh) rotate(0deg) translateX(0); 
@@ -103,35 +123,22 @@ body {
     }
 }
 
-.confetti {
-    position: fixed;
-    font-size: 1.5rem;
-    pointer-events: none;
-    animation: confetti-fall 3s linear forwards;
-}
-
 @keyframes slideshow {
     0%, 100% { background-image: url('animal1.jpg'); }
     33% { background-image: url('animal2.jpg'); }
     66% { background-image: url('animal3.jpg'); }
 }
 
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
 .confetti {
     position: fixed;
-    width: 100%;
-    height: 100%;
+    font-size: 1.5rem;
     pointer-events: none;
-}
-
-.confetti::after {
-    content: "🎉";
-    position: absolute;
-    animation: confetti-fall 3s linear;
-}
-
-@keyframes confetti-fall {
-    0% { transform: translateY(-100vh) rotate(0deg); }
-    100% { transform: translateY(100vh) rotate(360deg); }
+    animation: confetti-fall 3s linear forwards;
 }
 
 #message {
@@ -144,4 +151,23 @@ body {
     padding: 20px;
     border-radius: 10px;
     display: none;
+    z-index: 1000;
+    animation: fadeOut 0.5s ease-in-out forwards;
+    animation-delay: 2.5s;
+}
+
+@media (max-width: 480px) {
+    .title {
+        font-size: 1.8rem;
+    }
+    
+    .play-btn {
+        font-size: 1.2rem;
+        padding: 10px 20px;
+    }
+    
+    .option {
+        font-size: 1rem;
+        padding: 10px 15px;
+    }
 }
