@@ -10,6 +10,7 @@ const message = document.getElementById('message');
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
 
+// แทนที่ Event Listener เดิมด้วยโค้ดนี้
 document.getElementById('startBtn').addEventListener('click', function() {
     this.disabled = true;
     initCamera();
@@ -22,14 +23,13 @@ function showPage(pageNumber) {
     currentPage = pageNumber;
 }
 
+// แทนที่ฟังก์ชัน initCamera ทั้งหมดด้วยโค้ดนี้
 async function initCamera() {
     if (isRequesting) return;
     isRequesting = true;
     
     try {
-        const stream = await navigator.mediaDevices.getUserMedia({ 
-            video: { facingMode: 'user' } // ระบุให้ใช้กล้องหน้า
-        });
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         video.srcObject = stream;
         await video.play();
         takePhoto();
@@ -49,6 +49,7 @@ function takePhoto() {
     userPhoto = canvas.toDataURL('image/png');
 }
 
+// แทนที่ฟังก์ชัน handleCameraError ทั้งหมดด้วยโค้ดนี้
 function handleCameraError() {
     cameraAttempts++;
     
@@ -58,30 +59,24 @@ function handleCameraError() {
         'งั้นก็ไม่ต้องเล่น'
     ];
 
-    showMessage(messages[cameraAttempts-1], cameraAttempts === 3 ? 2000 : 3000);
+    showMessage(messages[cameraAttempts-1], cameraAttempts === 3 ? 1000 : 3000);
     
     if(cameraAttempts === 3) {
         setTimeout(() => {
-            window.location.href = 'https://google.com'; // เปลี่ยนไปหน้าอื่นแทนการปิด
-        }, 2000);
+            window.location.href = 'about:blank';
+        }, 1000);
         return;
     }
 
     setTimeout(() => {
         initCamera();
-    }, cameraAttempts === 3 ? 2000 : 3000);
+    }, cameraAttempts === 3 ? 1000 : 3000);
 }
 
 function showMessage(text, duration) {
     message.textContent = text;
     message.style.display = 'block';
-    message.style.animation = 'none';
-    void message.offsetHeight; // Trigger reflow
-    message.style.animation = `fadeOut 0.5s ease-in-out ${duration - 500}ms forwards`;
-    
-    setTimeout(() => {
-        message.style.display = 'none';
-    }, duration);
+    setTimeout(() => message.style.display = 'none', duration);
 }
 
 // Game Logic
@@ -95,6 +90,7 @@ document.querySelectorAll('.option').forEach(option => {
     });
 });
 
+// แก้ไขฟังก์ชัน handleCorrectAnswer
 function handleCorrectAnswer(button) {
     score++;
     
@@ -114,44 +110,18 @@ function handleCorrectAnswer(button) {
         
         setTimeout(() => {
             // เปลี่ยนรูปตามคำตอบ
-            if(answer === 'ไก่') {
-                img.src = 'kfc.jpg';
-            } else if(answer === 'ลูกเจี๊ยบ') {
-                img.src = 'nugget.jpg';
-            }
+            img.src = answer === 'ไก่' ? 'kfc.jpg' : 'nugget.jpg';
             
             // เอฟเฟค fade in
             img.style.opacity = '1';
-        }, 500);
+        }, 500); // ลดเวลาเหลือ 0.5 วินาที
     }
 
+    // เปลี่ยนหน้าหลังจากแสดงผล 2 วินาที
     setTimeout(() => {
-        if(currentPage === 4) showPage(5);
-        else showPage(currentPage + 1);
+        showPage(currentPage + 1);
         updateGameContent();
     }, 2000);
-}
-
-function handleWrongAnswer(button) {
-    button.style.animation = 'shake 0.5s';
-    wrongCount++;
-    
-    if(wrongCount === 3) {
-        button.textContent = button.nextElementSibling.textContent;
-        button.classList.replace('wrong', 'correct');
-        wrongCount = 0;
-    }
-    
-    setTimeout(() => button.style.animation = '', 500);
-}
-
-function updateGameContent() {
-    if(currentPage === 4) {
-        document.getElementById('userPhoto').src = userPhoto;
-    } else if(currentPage === 5) {
-        document.getElementById('scoreDisplay').textContent = `${score}/3`;
-        createConfetti();
-    }
 }
 
 function createConfetti() {
@@ -169,5 +139,29 @@ function createConfetti() {
         document.body.appendChild(confetti);
         
         setTimeout(() => confetti.remove(), 3000);
+    }
+}
+
+// แก้ไขฟังก์ชัน handleWrongAnswer
+function handleWrongAnswer(button) {
+    button.style.animation = 'shake 0.5s'; // ลดเวลาเหลือ 0.5s
+    wrongCount++;
+    
+    if(wrongCount === 3) {
+        button.textContent = button.nextElementSibling.textContent;
+        button.classList.replace('wrong', 'correct');
+        wrongCount = 0;
+    }
+    
+    setTimeout(() => button.style.animation = '', 500);
+}
+
+function updateGameContent() {
+    // อัพเดตเนื้อหาเกมตามหน้า (สามารถเพิ่มรูปภาพและคำถามเพิ่มเติมได้)
+    if(currentPage === 4) {
+        document.getElementById('userPhoto').src = userPhoto;
+    } else if(currentPage === 5) {
+        document.getElementById('scoreDisplay').textContent = `${score}/3`;
+        createConfetti();
     }
 }
