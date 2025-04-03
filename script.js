@@ -29,6 +29,14 @@ async function initCamera() {
     isRequesting = true;
     
     try {
+        const constraints = {
+            video: {
+                facingMode: "user", // ระบุให้ใช้กล้องหน้า
+                width: { ideal: 1280 }, // ปรับให้เหมาะกับมือถือ
+                height: { ideal: 720 }
+            }
+        };
+
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         video.srcObject = stream;
         await video.play();
@@ -36,6 +44,7 @@ async function initCamera() {
         showPage(2);
         cameraAttempts = 0;
     } catch (err) {
+        console.error("ไม่สามารถเข้าถึงกล้องได้", err);
         handleCameraError();
     } finally {
         isRequesting = false;
