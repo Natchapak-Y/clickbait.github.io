@@ -84,6 +84,16 @@ function handleCorrectAnswer(button) {
     plusOne.style.animation = 'float 2s';
     button.appendChild(plusOne);
 
+    // เพิ่มส่วนเปลี่ยนรูปภาพเมื่ออยู่หน้า 3
+    if(currentPage === 3) {
+        const img = document.querySelector('#page3 .animal-img');
+        if(button.textContent === 'ไก่') {
+            img.src = 'kfc.jpg'; // เปลี่ยนเป็นรูปไก่ KFC
+        } else if(button.textContent === 'ลูกเจี๊ยบ') {
+            img.src = 'nugget.jpg'; // เปลี่ยนเป็นนักเก็ต KFC
+        }
+    }
+
     setTimeout(() => {
         if(currentPage === 4) showPage(5);
         else showPage(currentPage + 1);
