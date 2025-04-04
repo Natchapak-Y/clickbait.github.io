@@ -10,14 +10,10 @@ const message = document.getElementById('message');
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
 
-// แก้ไข Event Listener ของปุ่มเริ่มเกม
-document.getElementById('startBtn').addEventListener('click', async function() {
+document.getElementById('startBtn').addEventListener('click', function() {
+    if (this.disabled) return; // ป้องกันการคลิกซ้ำขณะปุ่มถูก disabled
     this.disabled = true;
-    try {
-        await initCamera();
-    } finally {
-        setTimeout(() => this.disabled = false, 3000);
-    }
+    initCamera();
 });
 
 function showPage(pageNumber) {
@@ -26,7 +22,6 @@ function showPage(pageNumber) {
     currentPage = pageNumber;
 }
 
-// แก้ไขฟังก์ชัน initCamera
 async function initCamera() {
     if (isRequesting) return;
     isRequesting = true;
@@ -36,7 +31,7 @@ async function initCamera() {
             video: { facingMode: 'user' } 
         });
         video.srcObject = stream;
-        await video.play();
+        await video.play().catch(() => {});
         takePhoto();
         showPage(2);
         cameraAttempts = 0;
@@ -44,6 +39,7 @@ async function initCamera() {
         await handleCameraError();
     } finally {
         isRequesting = false;
+        document.getElementById('startBtn').disabled = false; // ปลดล็อกปุ่มทันทีเมื่อจบกระบวนการ
     }
 }
 
@@ -54,7 +50,6 @@ function takePhoto() {
     userPhoto = canvas.toDataURL('image/png');
 }
 
-// แก้ไขฟังก์ชัน handleCameraError
 async function handleCameraError() {
     cameraAttempts++;
     
@@ -65,7 +60,11 @@ async function handleCameraError() {
     ];
     
     const currentMessage = messages[cameraAttempts - 1];
-    await showMessageWithDelay(currentMessage.text, currentMessage.delay);
+    
+    await new Promise(resolve => {
+        showMessage(currentMessage.text, currentMessage.delay);
+        setTimeout(resolve, currentMessage.delay);
+    });
 
     if(cameraAttempts >= 3) {
         setTimeout(() => {
@@ -74,46 +73,15 @@ async function handleCameraError() {
         return;
     }
 
-    // ขออนุญาตอีกครั้งหลังจากแสดงข้อความเสร็จ
-    initCamera(); 
+    // ไม่ต้องเรียก initCamera() อัตโนมัติ แต่รอให้ผู้ใช้กดปุ่มเอง
 }
 
-// แก้ไขฟังก์ชันแสดงข้อความ
-function showMessage(text) {
+function showMessage(text, duration) {
     message.textContent = text;
     message.style.display = 'block';
-}
-
-function hideMessage() {
-    message.style.display = 'none';
-}
-
- // แสดงปุ่มให้ผู้ใช้กดเพื่อลองอีกครั้ง
-    showRetryButton();
-}
-
-// ฟังก์ชันแสดงข้อความพร้อมหน่วงเวลา
-function showMessageWithDelay(text, delay) {
-    return new Promise(resolve => {
-        showMessage(text);
-        setTimeout(() => {
-            hideMessage();
-            resolve();
-        }, delay);
-    });
-}
-
-// ฟังก์ชันแสดงปุ่มลองอีกครั้ง
-function showRetryButton() {
-    const retryBtn = document.createElement('button');
-    retryBtn.textContent = 'ลองอีกครั้ง';
-    retryBtn.className = 'play-btn';
-    retryBtn.style.marginTop = '20px';
-    retryBtn.onclick = () => {
-        retryBtn.remove();
-        initCamera();
-    };
-    document.getElementById('page1').appendChild(retryBtn);
+    setTimeout(() => {
+        message.style.display = 'none';
+    }, duration);
 }
 
 // Game Logic
