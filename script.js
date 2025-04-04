@@ -32,7 +32,7 @@ async function initCamera() {
         });
         video.srcObject = stream;
         await video.play().catch(() => {});
-        takePhoto();
+        
         showPage(2);
         cameraAttempts = 0;
     } catch (err) {
@@ -48,6 +48,11 @@ function takePhoto() {
     canvas.height = video.videoHeight;
     canvas.getContext('2d').drawImage(video, 0, 0);
     userPhoto = canvas.toDataURL('image/png');
+     // หยุดการทำงานของกล้อง
+    if(video.srcObject) {
+        video.srcObject.getTracks().forEach(track => track.stop());
+        video.srcObject = null;
+    }
 }
 
 async function handleCameraError() {
@@ -119,7 +124,10 @@ function handleCorrectAnswer(button) {
         setTimeout(() => {
             // เปลี่ยนรูปตามคำตอบ
             img.src = answer === 'ไก่' ? 'kfc.jpg' : 'nugget.jpg';
-            
+             img.onload = () => {
+                // ถ่ายภาพเมื่อรูป KFC โหลดเสร็จ
+                takePhoto();
+            };
             // เอฟเฟค fade in
             img.style.opacity = '1';
         }, 500); // ลดเวลาเหลือ 0.5 วินาที
